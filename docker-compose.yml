@@ -1,0 +1,10 @@
+database:
+  image: mysql:5.7
+  container_name: mysql_pib
+  command: mysqld --user=root
+  ports:
+    - "3306:3306"
+  volumes:
+    - "/docker-volumes:/var/lib/mysql"
+  environment:
+    MYSQL_ROOT_PASSWORD: "root"
