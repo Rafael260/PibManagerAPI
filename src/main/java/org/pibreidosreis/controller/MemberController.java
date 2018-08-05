@@ -1,9 +1,5 @@
 package org.pibreidosreis.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.pibreidosreis.dto.MemberDTO;
 import org.pibreidosreis.entity.Member;
 import org.pibreidosreis.service.MemberService;
@@ -11,11 +7,11 @@ import org.pibreidosreis.util.mapper.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/members")
@@ -38,19 +34,19 @@ public class MemberController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<MemberDTO> create(@Valid @RequestBody MemberDTO memberDTO) {
-        Member newMember = service.insert(MapperUtils.map(memberDTO, Member.class));
+        Member newMember = MapperUtils.map(memberDTO, Member.class);
+        newMember = service.insert(newMember);
         return new ResponseEntity<>(MapperUtils.map(newMember, MemberDTO.class),
                 HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<MemberDTO> update(@PathVariable Long id,
-                                            @Valid @RequestBody MemberDTO memberDTO) {
-        Member member = service.findById(id);
-        MapperUtils.copyProperties(memberDTO, member);
-        service.update(member);
-        return new ResponseEntity<>(MapperUtils.map(member, MemberDTO.class),
-                HttpStatus.OK);
+                                            @Valid @RequestBody Member member) {
+        member.setId(id);
+        member = service.update(member);
+        return Optional.ofNullable(member).map(m -> new ResponseEntity<>(MapperUtils.map(m, MemberDTO.class),
+                HttpStatus.OK)).orElse(ResponseEntity.notFound().build());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

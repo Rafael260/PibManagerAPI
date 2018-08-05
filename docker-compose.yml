@@ -5,6 +5,6 @@ database:
   ports:
     - "3306:3306"
   volumes:
-    - "/docker-volumes:/var/lib/mysql"
+    - "${PWD}/docker-volumes:/var/lib/mysql"
   environment:
     MYSQL_ROOT_PASSWORD: "root"

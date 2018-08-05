@@ -1,6 +1,5 @@
 package org.pibreidosreis.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +22,13 @@ public abstract class AbstractService<E extends AbstractEntity> {
 		return list;
 	}
 	
-	public <D> List<D> findAll(Class<D> type){
+	public <D> List<D> findAll(Class<D> type) {
 		List<E> list = findAll();
 		return MapperUtils.mapAll(list, type);
 	}
 
 	public E findById(Long id) {
-		return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
+		return this.repository.findById(id).orElseThrow(ResourceNotFoundException::new);
 	}
 	
 	public <D> D findById(Long id, Class<D> type) {
@@ -46,12 +45,14 @@ public abstract class AbstractService<E extends AbstractEntity> {
 
 	public E update(E entityObject) {
 		onBeforeUpdate(entityObject);
+		if(!this.repository.existsById(entityObject.getId())) {
+			throw new ResourceNotFoundException();
+		}
 		entityObject = this.repository.save(entityObject);
 		onAfterUpdate(entityObject);
 		return entityObject;
 	}
 
-	//TODO retornar algum feedback sobre a operação
 	public void delete(E entityObject) {
 		onBeforeDelete(entityObject);
 		this.repository.delete(entityObject);
@@ -60,8 +61,7 @@ public abstract class AbstractService<E extends AbstractEntity> {
 
 	// Metodos de ciclo de vida, para serem sobrescritos caso necessite
 	public void onBeforeInsert(E entityToPersist) {
-		entityToPersist.setCreatedAt(LocalDateTime.now());
-		entityToPersist.setUpdatedAt(LocalDateTime.now());
+
 	}
 
 	public void onAfterInsert(E entityPersisted) {
@@ -69,7 +69,7 @@ public abstract class AbstractService<E extends AbstractEntity> {
 	}
 
 	public void onBeforeUpdate(E entityToUpdate) {
-		entityToUpdate.setUpdatedAt(LocalDateTime.now());
+
 	}
 
 	public void onAfterUpdate(E entityUpdated) {
