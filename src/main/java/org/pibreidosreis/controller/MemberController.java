@@ -45,8 +45,7 @@ public class MemberController {
                                             @Valid @RequestBody Member member) {
         member.setId(id);
         member = service.update(member);
-        return Optional.ofNullable(member).map(m -> new ResponseEntity<>(MapperUtils.map(m, MemberDTO.class),
-                HttpStatus.OK)).orElse(ResponseEntity.notFound().build());
+        return new ResponseEntity<>(MapperUtils.map(member, MemberDTO.class), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
