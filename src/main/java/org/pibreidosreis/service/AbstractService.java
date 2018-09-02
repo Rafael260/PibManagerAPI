@@ -44,10 +44,10 @@ public abstract class AbstractService<E extends AbstractEntity> {
 	}
 
 	public E update(E entityObject) {
-		onBeforeUpdate(entityObject);
 		if(!this.repository.existsById(entityObject.getId())) {
 			throw new ResourceNotFoundException();
 		}
+		onBeforeUpdate(entityObject);
 		entityObject = this.repository.save(entityObject);
 		onAfterUpdate(entityObject);
 		return entityObject;
@@ -57,6 +57,11 @@ public abstract class AbstractService<E extends AbstractEntity> {
 		onBeforeDelete(entityObject);
 		this.repository.delete(entityObject);
 		onAfterDelete(entityObject);
+	}
+
+	public void deleteById(Long id) {
+		E entityToDelete = findById(id);
+		delete(entityToDelete);
 	}
 
 	// Metodos de ciclo de vida, para serem sobrescritos caso necessite

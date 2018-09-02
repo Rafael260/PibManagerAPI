@@ -29,4 +29,6 @@ public class MemberDTO {
 	private LocalDate dateOfBirth;
 	
 	private String phone;
+
+	private AddressDTO address;
 }

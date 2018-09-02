@@ -2,7 +2,7 @@ package org.pibreidosreis.controller;
 
 import org.pibreidosreis.dto.MemberDTO;
 import org.pibreidosreis.entity.Member;
-import org.pibreidosreis.service.MemberService;
+import org.pibreidosreis.service.MembersService;
 import org.pibreidosreis.util.mapper.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/members")
-public class MemberController {
+public class MembersController {
 
     @Autowired
-    private MemberService service;
+    private MembersService service;
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<MemberDTO>> listAll() {
