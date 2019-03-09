@@ -2,6 +2,7 @@ package org.pibreidosreis.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,5 +31,6 @@ public class MemberDTO {
 	
 	private String phone;
 
+	@Valid
 	private AddressDTO address;
 }

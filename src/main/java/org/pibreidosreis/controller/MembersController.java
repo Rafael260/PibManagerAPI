@@ -16,8 +16,11 @@ import java.util.List;
 @RequestMapping(value = "/members")
 public class MembersController {
 
-    @Autowired
     private MembersService service;
+
+    public MembersController(MembersService service) {
+        this.service = service;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<MemberDTO>> listAll() {
